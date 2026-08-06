@@ -44,16 +44,12 @@ function azureApi<T>(args: string[], timeout = AZURE_API_TIMEOUT_MS): Promise<T>
         command.on('exit', code => {
           window.clearTimeout(timer);
           if (code) {
-            reject(
-              new Error(
-                stderr.trim() || `Azure API process exited with code ${code}`
-              )
-            );
+            reject(new Error(stderr.trim() || `Azure API process exited with code ${code}`));
             return;
           }
 
           try {
-            resolve(JSON.parse(stdout) as T);
+            resolve(JSON.parse(stdout.slice(stdout.indexOf('{'))) as T);
           } catch (error) {
             reject(error);
           }
