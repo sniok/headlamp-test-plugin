@@ -4,7 +4,7 @@ displayName: Testing Plugin
 createdAt: "2026-08-05T12:00:00Z"
 description: Testing Plugin
 annotations:
-  headlamp/plugin/archive-url: "https://github.com/sniok/headlamp-test-plugin/releases/download/0.1.0/azure-aks-0.1.0.tar.gz"
-  headlamp/plugin/archive-checksum: "SHA256:37fff3d9bb7d947a1c3c3b42b5cb2bcf0d4048bd81ce5c9e71bd9802f98b6534"
+  headlamp/plugin/archive-url: "https://github.com/sniok/headlamp-test-plugin/releases/download/0.2.0/azure-aks-0.2.0.tar.gz"
+  headlamp/plugin/archive-checksum: "SHA256:aae3ad24b1d50a25681abe6f0681bd30ae6b94072a71fc3bb58ed8976f7ce92e"
   headlamp/plugin/version-compat: ">=0.22"
   headlamp/plugin/distro-compat: "desktop"
