@@ -23,8 +23,19 @@ const createPromiseQueue = () => {
 
 const enqueueApiCall = createPromiseQueue();
 
+// Tracks in-flight (queued or running) requests by their args signature,
+// so identical calls share the same result instead of being enqueued again.
+const pendingApiCalls = new Map<string, Promise<unknown>>();
+
 function azureApi<T>(args: string[], timeout = AZURE_API_TIMEOUT_MS): Promise<T> {
-  return enqueueApiCall(
+  const key = JSON.stringify(args);
+
+  const existing = pendingApiCalls.get(key);
+  if (existing) {
+    return existing as Promise<T>;
+  }
+
+  const promise = enqueueApiCall(
     () =>
       new Promise<T>((resolve, reject) => {
         const command = pluginRunCommand('scriptjs', ['azure-aks/azure-api.js', ...args], {});
@@ -36,6 +47,7 @@ function azureApi<T>(args: string[], timeout = AZURE_API_TIMEOUT_MS): Promise<T>
         );
 
         command.stdout.on('data', data => {
+          console.log('received data', String(data));
           stdout += String(data);
         });
         command.stderr.on('data', data => {
@@ -55,7 +67,12 @@ function azureApi<T>(args: string[], timeout = AZURE_API_TIMEOUT_MS): Promise<T>
           }
         });
       })
-  );
+  ).finally(() => {
+    pendingApiCalls.delete(key);
+  });
+
+  pendingApiCalls.set(key, promise);
+  return promise;
 }
 
 const tokenCache = new Map<string, Promise<AzureToken>>();

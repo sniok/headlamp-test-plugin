@@ -80,7 +80,7 @@ const AzureApi = {
   },
 
   /** Request a token for given scopes */
-  async getToken(scopes: string | string[], { silent }: { silent: boolean } = { silent: false }) {
+  async getToken(scopes: string | string[], { silent }: { silent: boolean } = { silent: true }) {
     try {
       const cred = AzureApi.createCredential();
       const scopeArray = Array.isArray(scopes) ? scopes : [scopes];
